@@ -37,12 +37,43 @@ void apply_move(int move, char mark) {
     board[row][col] = mark;
 }
 
+void getTime(char *buf) {
+    char days[10];
+
+    time_t tim; 
+    time(&tim); // tim 생성
+    tzset(); // tzname에 시간대 할당
+    
+    // tm 구조체 생성
+    struct tm *t = localtime(&tim);
+
+    // 요일 처리
+    if (t->tm_wday == 0)
+        strcpy(days, "일");
+    else if (t->tm_wday == 1)
+        strcpy(days, "월");
+    else if (t->tm_wday == 2)
+        strcpy(days, "화");
+    else if (t->tm_wday == 3)
+        strcpy(days, "수");
+    else if (t->tm_wday == 4)
+        strcpy(days, "목");
+    else if (t->tm_wday == 5)
+        strcpy(days, "금");
+    else if (t->tm_wday == 6)
+        strcpy(days, "토");
+
+    sprintf(buf, "%d년 %.2d월 %.2d일 %s요일 %.2d시 %.2d분 %.2d초 %s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, days, t->tm_hour, t->tm_min, t->tm_sec, tzname[0]);
+}
+
 int main() {
     int server_fd, new_socket;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
     char buffer[1024] = {0};
     pid_t client_pid;
+
+    int history = open("history.txt", O_WRONLY | O_APPEND); // 이어쓰기 전용 열기
 
     // 소켓 생성
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -125,6 +156,20 @@ int main() {
         }
     }
 
+    // 기록 적기
+    char buf[100];
+    getTime(buf);
+    write(history, buf, strlen(buf));
+    for (int i = 0; i < SIZE; i++) {
+        
+        for (int j = 0; j < SIZE; j++) {
+            sprintf(buf, "%c ", board[i][j]);
+            write(history, buf, 2);
+        }
+        write(history, "\n", 1);
+    }
+
+    close(history);
     close(new_socket);
     close(server_fd);
     return 0;
