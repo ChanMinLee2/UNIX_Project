@@ -128,6 +128,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# modified history.txt
+history.txt
+
 # 실행파일 #
 # Ignore all
 *
