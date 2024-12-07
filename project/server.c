@@ -70,7 +70,7 @@ int main() {
     int server_fd, new_socket;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
-    char buffer[1024] = {0};
+    // char buffer[1024] = {0};
     pid_t client_pid;
 
     int history = open("history.txt", O_WRONLY | O_APPEND); // 이어쓰기 전용 열기
