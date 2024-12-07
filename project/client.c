@@ -8,9 +8,9 @@ void sig_handler(int signo) {
 }
 
 int main() {
-    int sock = 0, valread, length;
+    int sock = 0;
     struct sockaddr_in serv_addr;
-    char buffer[1024] = {0};
+    // char buffer[1024] = {0};
     pid_t pid;
 
 
@@ -48,7 +48,7 @@ int main() {
 
         int move;
         printf("Waiting for opponent's move\n");
-        length = recv(sock, board, sizeof(board), 0);
+        recv(sock, board, sizeof(board), 0);
 
         // 상대가 승리했다고 소켓을 보낸 경우
         if (board[0][0] == 'W' && board[0][1] == 'i' && board[0][2] == 'n') {
